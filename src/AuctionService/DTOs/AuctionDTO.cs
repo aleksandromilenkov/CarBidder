@@ -5,20 +5,20 @@ namespace AuctionService.DTOs
     public class AuctionDTO
     {
         public Guid Id { get; set; }
-        public string Seller { get; set; }
-        public string Winner { get; set; }
+        public required string Seller { get; set; }
+        public string? Winner { get; set; }
         public DateTime CreatedAt { get; set; }
         public DateTime UpdatedAt { get; set; }
         public DateTime AuctionEnd { get; set; }
-        public Status Status { get; set; }
+        public required string Status { get; set; }
         public int ReservePrice { get; set; }
         public int SoldAmount { get; set; }
         public int CurrentHighBid { get; set; }
-        public string Make { get; set; }
-        public string Model { get; set; }
+        public required string Make { get; set; }
+        public required string Model { get; set; }
         public int Year { get; set; }
-        public string Color { get; set; }
+        public required string Color { get; set; }
         public int Mileage { get; set; }
-        public string ImageUrl { get; set; }
+        public required string ImageUrl { get; set; }
     }
 }
