@@ -1,0 +1,51 @@
+# =========================================
+# .NET / C# / Visual Studio
+# =========================================
+
+# Build outputs
+bin/
+obj/
+out/
+
+# VS / VSCode files
+.vs/
+.vscode/
+*.suo
+*.user
+*.userosscache
+*.sln.docstates
+
+# Rider IDE
+.idea/
+.idea/**/workspace.xml
+.idea/**/tasks.xml
+.idea/**/dictionaries
+.idea/**/shelf
+
+# OS generated files
+.DS_Store
+Thumbs.db
+
+# NuGet
+*.nupkg
+*.snupkg
+packages/
+.nuget/
+project.lock.json
+project.fragment.lock.json
+artifacts/
+
+# Docker
+docker-compose.override.yml
+*.env
+**/Dockerfile
+
+# Logs
+*.log
+logs/
+
+# EF Core Migrations (usually safe to commit)
+# src/**/Migrations/
+
+# appsettings - ignore development secrets
+**/appsettings.Development.json
