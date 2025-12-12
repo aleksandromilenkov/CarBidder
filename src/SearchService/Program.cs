@@ -1,22 +1,30 @@
 using System.Net;
 using MassTransit;
+using Microsoft.Extensions.DependencyInjection;
 using MongoDB.Driver;
 using MongoDB.Entities;
 using Polly;
 using Polly.Extensions.Http;
+using AutoMapper;
 using SearchService.Data;
 using SearchService.Models;
 using SearchService.Services;
+using SearchService.Consumers;
 
 
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
 builder.Services.AddControllers();
+builder.Services.AddAutoMapper(AppDomain.CurrentDomain.GetAssemblies());
+
 builder.Services.AddHttpClient<AuctionServiceHTTPClient>().AddPolicyHandler(GetPolicy());
 
 builder.Services.AddMassTransit(x =>
 {
+    // Where to find consumers that we are creating:
+    x.AddConsumersFromNamespaceContaining<AuctionCreatedConsumer>();
+    x.SetEndpointNameFormatter(new KebabCaseEndpointNameFormatter("search", false));
     x.UsingRabbitMq((context, cfg) =>
     {
         cfg.ConfigureEndpoints(context);
