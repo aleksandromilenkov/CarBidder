@@ -18,6 +18,11 @@ services:
       - 27017:27017
     volumes:
       - mongodata:/data/db
+  rabbitmq:
+    image: rabbitmq:3-management-alpine
+    ports:
+      - "5672:5672" # RabbitMQ messaging port
+      - "15672:15672" # Management dashboard port: localhost:15672 username guest, pass is guest
 volumes:
   pgdata:
   mongodata:
