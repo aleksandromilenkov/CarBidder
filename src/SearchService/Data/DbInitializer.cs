@@ -19,13 +19,16 @@ namespace SearchService.Data
                 .CreateAsync();
 
             var count = await DB.CountAsync<Item>();
+            using var scope = app.Services.CreateScope();
+            var httpClient = scope.ServiceProvider.GetRequiredService<Services.AuctionServiceHTTPClient>();
             if (count == 0)
             {
-                Console.WriteLine("No data - going on seeding data...");
-                var itemData = await File.ReadAllTextAsync("Data/auctions.json");
-                var options = new JsonSerializerOptions { PropertyNameCaseInsensitive = true };
-                var items = JsonSerializer.Deserialize<List<Item>>(itemData, options);
-                await DB.SaveAsync(items!);
+                var items = await httpClient.GetItemsForSearchDb();
+                Console.WriteLine(items.Count + " returned from the AuctionService");
+                if (items.Count > 0)
+                {
+                    await DB.SaveAsync(items);
+                }
             }
         }
     }
