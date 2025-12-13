@@ -1,6 +1,7 @@
 ﻿using System.Globalization;
 using AuctionService.Data;
 using AuctionService.DTOs;
+using AuctionService.Entities;
 using AutoMapper;
 using AutoMapper.QueryableExtensions;
 using Contracts;
@@ -72,6 +73,9 @@ namespace AuctionService.Controllers
 
             var newAuction = _mapper.Map<AuctionDTO>(auction);
 
+            // with MassTransint Entity Framework, publishing the message and saving the changes
+            // in this current Postgres db are part of the same transaction
+            // so if one failes, both will fail -> no databases inconsistency!
             await _publishEndpoint.Publish(_mapper.Map<AuctionCreated>(newAuction));
 
             var result = await _context.SaveChangesAsync() > 0;
@@ -95,6 +99,11 @@ namespace AuctionService.Controllers
             auction.Item.Year = auctionDTO.Year ?? auction.Item.Year;
             auction.Item.Mileage = auctionDTO.Mileage ?? auction.Item.Mileage;
             auction.UpdatedAt = DateTime.UtcNow;
+
+            var auctionToPublish = _mapper.Map<AuctionUpdated>(auctionDTO);
+            auctionToPublish.Id = id.ToString();
+            await _publishEndpoint.Publish(auctionToPublish);
+
             var result = await _context.SaveChangesAsync() > 0;
             if (result) return Ok();
             return BadRequest("Problem saving changes");
@@ -109,7 +118,11 @@ namespace AuctionService.Controllers
                 return NotFound();
             }
             _context.Auctions.Remove(auction);
+
+            await _publishEndpoint.Publish(new AuctionDeleted { Id = auction.Id.ToString() });
+
             var result  = await _context.SaveChangesAsync() > 0;
+
             if (result) return NoContent();
             return BadRequest("Problem removing Auction");
         }

@@ -22,6 +22,7 @@ namespace AuctionService.RequestHelpers
             CreateMap<CreateAuctionDTO, Item>();
 
             CreateMap<AuctionDTO, AuctionCreated>();
+            CreateMap<UpdateAuctionDTO, AuctionUpdated>();
         }
     }
 }
