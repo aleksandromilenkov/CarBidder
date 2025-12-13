@@ -1,6 +1,7 @@
 ﻿using AuctionService.DTOs;
 using AuctionService.Entities;
 using AutoMapper;
+using Contracts;
 
 namespace AuctionService.RequestHelpers
 {
@@ -19,6 +20,8 @@ namespace AuctionService.RequestHelpers
 
             // Necessary because of the previous mapping
             CreateMap<CreateAuctionDTO, Item>();
+
+            CreateMap<AuctionDTO, AuctionCreated>();
         }
     }
 }
