@@ -1,4 +1,5 @@
 ﻿using AuctionService.Entities;
+using MassTransit;
 using Microsoft.EntityFrameworkCore;
 
 namespace AuctionService.Data
@@ -23,6 +24,10 @@ namespace AuctionService.Data
             modelBuilder.Entity<Item>()
                 .HasIndex(i => i.AuctionId)
                 .IsUnique();
+            // Outbox functionality (3 separete tables in our db)
+            modelBuilder.AddInboxStateEntity();
+            modelBuilder.AddOutboxMessageEntity();
+            modelBuilder.AddOutboxStateEntity();
         }
     }
 }

@@ -64,13 +64,17 @@ namespace AuctionService.Controllers
                 return BadRequest();
             }
             var auction = _mapper.Map<Entities.Auction>(auctionDTO);
+
             // TODO: add current logged in user as seller
             auction.Seller = "test";
+
             _context.Auctions.Add(auction);
-            var result = await _context.SaveChangesAsync() > 0;
 
             var newAuction = _mapper.Map<AuctionDTO>(auction);
+
             await _publishEndpoint.Publish(_mapper.Map<AuctionCreated>(newAuction));
+
+            var result = await _context.SaveChangesAsync() > 0;
 
             if(!result) return BadRequest("Could not create auction");
             return CreatedAtAction(nameof(GetAuctionById), new { id = auction.Id }, newAuction);

@@ -15,6 +15,16 @@ builder.Services.AddAutoMapper(AppDomain.CurrentDomain.GetAssemblies());
 
 builder.Services.AddMassTransit(x =>
 {
+    x.AddEntityFrameworkOutbox<AuctionDbContext>(o =>
+    {
+        // if bus service is down and we create auction in the AuctionService
+        // then the database in the SearchService will be inconsistent
+        // with the db in AuctionService, so that's why we need this Outbox,
+        // to try send the message again every 5 seconds
+        o.QueryDelay = TimeSpan.FromSeconds(5);
+        o.UsePostgres();
+        o.UseBusOutbox();
+    });
     x.UsingRabbitMq((context, cfg) =>
     {
         cfg.ConfigureEndpoints(context);
