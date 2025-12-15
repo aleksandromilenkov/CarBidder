@@ -49,3 +49,6 @@ logs/
 
 # appsettings - ignore development secrets
 **/appsettings.Development.json
+
+# Duende IdentityServer signing keys
+keys/
