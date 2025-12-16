@@ -6,6 +6,7 @@ using AutoMapper;
 using AutoMapper.QueryableExtensions;
 using Contracts;
 using MassTransit;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
@@ -57,6 +58,7 @@ namespace AuctionService.Controllers
             return Ok(auctionDTO);
         }
 
+        [Authorize]
         [HttpPost]
         public async Task<ActionResult<AuctionDTO>> CreateAuction([FromBody] CreateAuctionDTO auctionDTO)
         {
@@ -67,7 +69,7 @@ namespace AuctionService.Controllers
             var auction = _mapper.Map<Entities.Auction>(auctionDTO);
 
             // TODO: add current logged in user as seller
-            auction.Seller = "test";
+            auction.Seller = User.Identity.Name ?? "anonymous";
 
             _context.Auctions.Add(auction);
 
@@ -84,6 +86,7 @@ namespace AuctionService.Controllers
             return CreatedAtAction(nameof(GetAuctionById), new { id = auction.Id }, newAuction);
         }
 
+        [Authorize]
         [HttpPut("{id}")]
         public async Task<ActionResult> UpdateAuction(Guid id, [FromBody] UpdateAuctionDTO auctionDTO)
         {
@@ -93,6 +96,10 @@ namespace AuctionService.Controllers
                 return NotFound();
             }
             // TODO: Check seller == current logged in user (its username)
+            if (User.Identity.Name != auction.Seller)
+            {
+                return Forbid();
+            }
             auction.Item.Make = auctionDTO.Make ?? auction.Item.Make;
             auction.Item.Model = auctionDTO.Model ?? auction.Item.Model;
             auction.Item.Color = auctionDTO.Color ?? auction.Item.Color;
@@ -109,6 +116,7 @@ namespace AuctionService.Controllers
             return BadRequest("Problem saving changes");
         }
 
+        [Authorize]
         [HttpDelete("{id}")]
         public async Task<ActionResult> DeleteAuction(Guid id)
         {
@@ -116,6 +124,10 @@ namespace AuctionService.Controllers
             if (auction == null)
             {
                 return NotFound();
+            }
+            if (auction.Seller != User.Identity.Name)
+            {
+                return Forbid();
             }
             _context.Auctions.Remove(auction);
 
