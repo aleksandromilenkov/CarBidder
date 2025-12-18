@@ -27,6 +27,11 @@ builder.Services.AddMassTransit(x =>
     x.SetEndpointNameFormatter(new KebabCaseEndpointNameFormatter("search", false));    
     x.UsingRabbitMq((context, cfg) =>
     {
+        cfg.Host(builder.Configuration["RabbitMq:Host"], "/", h => {
+            h.Username(builder.Configuration.GetValue("RabbitMq:Username", "guest")); // if not specified RabbitMq:Username in the config, use the word 'guest'
+            h.Username(builder.Configuration.GetValue("RabbitMq:Password", "guest"));
+        });
+
         cfg.ReceiveEndpoint("search-auction-created", e =>
         {
             e.UseMessageRetry(r => r.Interval(5, 5));
@@ -34,6 +39,7 @@ builder.Services.AddMassTransit(x =>
             e.ConfigureConsumer<AuctionUpdatedConsumer>(context);
             e.ConfigureConsumer<AuctionDeletedConsumer>(context);
         });
+
         cfg.ConfigureEndpoints(context);
     });
 });
