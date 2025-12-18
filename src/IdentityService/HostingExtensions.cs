@@ -71,9 +71,12 @@ internal static class HostingExtensions
                 {
                     options.Diagnostics.ChunkSize = 1024 * 1024 * 10; // 10 MB
                 }
+                // When running in Docker use the service DNS name as the issuer so other containers
+                // (gateway, services) validate tokens issued by this IdentityServer.
                 if (builder.Environment.IsEnvironment("Docker"))
                 {
-                    options.IssuerUri = "http://localhost:5001";
+                    // Prefer an explicit configuration value if present, otherwise fall back to the Docker service name.
+                    options.IssuerUri = builder.Configuration["IdentityServiceUrl"] ?? "http://identity-svc";
                 }
             })
             .AddInMemoryIdentityResources(Config.IdentityResources)

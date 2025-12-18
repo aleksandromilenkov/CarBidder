@@ -39,10 +39,13 @@ builder.Services.AddMassTransit(x =>
     });
 });
 
+// Resolve authority from either Docker config key or local appsettings
+var authority = builder.Configuration["IdentityServiceUrl"] ?? builder.Configuration["IdentityServer:Url"];
+
 builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
     .AddJwtBearer(options =>
     {
-        options.Authority = builder.Configuration["IdentityServer:Url"];
+        options.Authority = authority;
         options.RequireHttpsMetadata = false;
         options.TokenValidationParameters.ValidateAudience = false;
         options.TokenValidationParameters.NameClaimType = "username";

@@ -7,15 +7,31 @@ var builder = WebApplication.CreateBuilder(args);
 builder.Services.AddReverseProxy()
     .LoadFromConfig(builder.Configuration.GetSection("ReverseProxy"));
 
+// Resolve authority from either Docker config key or local appsettings
+var authority = builder.Configuration["IdentityServiceUrl"] ?? builder.Configuration["IdentityServer:Url"];
+
 builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
     .AddJwtBearer(options =>
     {
-        options.Authority = builder.Configuration["IdentityServiceUrl"];
+        options.Authority = authority;
         options.RequireHttpsMetadata = false;
         options.TokenValidationParameters.ValidateAudience = false;
         options.TokenValidationParameters.NameClaimType = "username";
     });
 
+// Do not register a policy named "default" because YARP reserves that name for routes.
+// Use a distinct policy name and match it in the ReverseProxy route configuration.
+const string PolicyNameRequireAuctionScope = "RequireAuctionAppScope";
+
+builder.Services.AddAuthorization(options =>
+{
+    options.AddPolicy(PolicyNameRequireAuctionScope, policy =>
+    {
+        policy.RequireAuthenticatedUser();
+        // require the access token to include the auctionApp scope
+        policy.RequireClaim("scope", "auctionApp");
+    });
+});
 
 var app = builder.Build();
 
