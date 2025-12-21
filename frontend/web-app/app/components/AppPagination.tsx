@@ -1,18 +1,16 @@
 "use client"
+import { useParamsStore } from "@/hooks/useParamsStore";
 import { Pagination } from "flowbite-react"
-type Props = {
-    currentPage: number;
-    pageCount: number;
-    setPageNumber: (page: number) => void;
-}
-const AppPagination = ({ currentPage, pageCount, setPageNumber }: Props) => {
 
+const AppPagination = () => {
+  const {pageNumber: currentPage, pageCount, setParams} = useParamsStore();
+  
   return (
     <Pagination
         currentPage={currentPage}
         totalPages={pageCount}
         onPageChange={(page) => {
-          setPageNumber(page);
+          setParams({pageNumber: page});
         }}
         layout="pagination"
         showIcons={true}
