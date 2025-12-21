@@ -28,7 +28,7 @@ const Listings = () => {
       setData(data);
       setParams({pageCount: data.pageCount});
     });
-  }, [pageNumber, pageSize]);
+  }, [pageNumber, pageSize, searchTerm]);
 
   if (!data) {
     return <p>Loading auctions...</p>;
