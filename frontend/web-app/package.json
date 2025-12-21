@@ -6,9 +6,12 @@
     "dev": "next dev",
     "build": "next build",
     "start": "next start",
-    "lint": "eslint"
+    "lint": "eslint",
+    "postinstall": "flowbite-react patch"
   },
   "dependencies": {
+    "flowbite": "^4.0.1",
+    "flowbite-react": "^0.11.9",
     "next": "16.1.0",
     "react": "19.2.3",
     "react-countdown": "^2.3.6",

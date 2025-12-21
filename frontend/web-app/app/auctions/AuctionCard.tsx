@@ -1,21 +1,15 @@
-import Image from "next/image"
+import { Auction } from "@/types";
+import CarImage from "./CarImage";
 import CountdownTimer from "./CountdownTimer";
 
 type Props = {
-    auction:any;
+    auction:Auction;
 }
 const AuctionCard = ({auction}: Props) => {
   return (
     <a href="#">
         <div className="w-full bg-gray-200 aspect-16/10 rounded-lg overflow-hidden relative">
-            <Image
-                src={auction.imageUrl || '/placeholder.png'}
-                alt='Image of auctioned car'
-                fill
-                className="object-cover hover:scale-105 transition-transform duration-300"
-                priority
-                sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 25vw"
-            />
+            <CarImage imageUrl={auction.imageUrl} />
             <div className="absolute bottom-2 left-2">
                 <CountdownTimer auctionEnd={auction.auctionEnd} />
             </div>

@@ -17,13 +17,6 @@ const renderer = ({ days, hours, minutes, seconds, completed }:
             )}  
         </div>
     )
-    if (completed) {
-    // Render a completed state
-    return <span>Finished</span>
-  } else {
-    // Render a countdown
-    return <span>{days}:{hours}:{minutes}:{seconds}</span>;
-  }
 };
 const CountdownTimer = ({auctionEnd}: Props) => {
   return (
