@@ -3,8 +3,10 @@ using Duende.IdentityServer;
 using IdentityService.Data;
 using IdentityService.Models;
 using IdentityService.Services;
+using Microsoft.AspNetCore.DataProtection;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.DependencyInjection;
 using Microsoft.IdentityModel.Tokens;
 using Serilog;
 using Serilog.Filters;
@@ -49,6 +51,12 @@ internal static class HostingExtensions
 
     public static WebApplication ConfigureServices(this WebApplicationBuilder builder)
     {
+        // Configure Data Protection to persist keys to the mounted volume path
+        var dataProtectionPath = "/root/.aspnet/DataProtection-Keys"; // matches your Docker volume mount
+
+        builder.Services.AddDataProtection()
+            .PersistKeysToFileSystem(new DirectoryInfo("keys"))
+            .SetApplicationName("IdentityService");  // optional, but helps key sharing consistenc
         builder.Services.AddRazorPages();
 
         builder.Services.AddDbContext<ApplicationDbContext>(options =>
@@ -76,12 +84,13 @@ internal static class HostingExtensions
                 if (builder.Environment.IsEnvironment("Docker"))
                 {
                     // Prefer an explicit configuration value if present, otherwise fall back to the Docker service name.
-                    options.IssuerUri = builder.Configuration["IdentityServiceUrl"] ?? "http://identity-svc";
+                    options.IssuerUri = "http://localhost:5001";
                 }
             })
+            .AddDeveloperSigningCredential()
             .AddInMemoryIdentityResources(Config.IdentityResources)
             .AddInMemoryApiScopes(Config.ApiScopes)
-            .AddInMemoryClients(Config.Clients)
+            .AddInMemoryClients(Config.Clients(builder.Configuration))
             .AddAspNetIdentity<ApplicationUser>()
             .AddProfileService<CustomProfileService>()
             .AddLicenseSummary();

@@ -90,7 +90,7 @@ services:
       postgres:
         condition: service_healthy
     volumes:
-      - idpkeys:/root/.aspnet/DataProtection-Keys
+      - ./IdentityService/keys:/app/keys
   gateway-svc:
     image: aleksandromilenkov/gateway-svc:latest
     build: 
@@ -104,4 +104,3 @@ services:
 volumes:
   pgdata:
   mongodata:
-  idpkeys:
