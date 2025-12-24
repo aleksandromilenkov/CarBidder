@@ -19,9 +19,10 @@ const Listings = () => {
     pageCount,
     orderBy,
     filterBy,
+    winner,
+    seller,
     searchTerm,
     setParams,
-    resetParams,
   } = useParamsStore(
     useShallow((state) => ({
       pageNumber: state.pageNumber,
@@ -29,13 +30,15 @@ const Listings = () => {
       pageCount: state.pageCount,
       searchTerm: state.searchTerm,
       orderBy: state.orderBy,
+      winner: state.winner,
+      seller: state.seller,
       filterBy: state.filterBy,
       setParams: state.setParams,
       resetParams: state.resetParams,
     }))
   );
   const url = qs.stringifyUrl(
-    { url: "", query: { pageNumber, pageSize, searchTerm, orderBy, filterBy } },
+    { url: "", query: { pageNumber, pageSize, searchTerm, orderBy, filterBy, winner, seller } },
     { skipEmptyString: true }
   );
 
@@ -44,7 +47,7 @@ const Listings = () => {
       setData(data);
       setParams({ pageCount: data.pageCount });
     });
-  }, [url]);
+  }, [setParams, url]);
 
   if (!data) {
     return <p>Loading auctions...</p>;
