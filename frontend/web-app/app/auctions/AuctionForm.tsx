@@ -4,6 +4,7 @@ import { useRouter } from "next/navigation";
 import { FieldValues, useForm } from "react-hook-form";
 import Input from "../components/Input";
 import { useEffect } from "react";
+import DateInput from "../components/DateInput";
 
 const AuctionForm = () => {
     const router = useRouter();
@@ -29,7 +30,7 @@ const AuctionForm = () => {
         </div>
         <div className="grid grid-col-2 gap-3">
             <Input name="reservePrice" label="Reserve Price(enter 0 if no reserve)" type="number" control={control} rules={{required: "Reserve Price is required"}}/>
-            <Input name="auctionEnd" label="Auction End Date" control={control} rules={{required: "Auction End Date is required"}}/>
+           <DateInput name="auctionEnd" showTimeSelect dateFormat="dd MMMM yyyy h:mm a" label="Auction End Date" control={control} rules={{required: "Auction End Date is required"}}/>
         </div>
         <div className="flex justify-between">
         <Button color='alternative' onClick={() => router.push('/')}>Cancel</Button>
