@@ -12,7 +12,7 @@ export type Auction = {
     winner?: string;
     currentHighBid?: number;
     soldAmount?: number;
-    reservePrice?: number;
+    reservePrice: number;
     mileage: number;
     auctionEnd: string; // ISO date string
     createdAt: string; // ISO date string
