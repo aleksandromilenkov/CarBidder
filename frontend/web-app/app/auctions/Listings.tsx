@@ -10,6 +10,7 @@ import { useParamsStore } from "@/hooks/useParamsStore";
 import { useShallow } from "zustand/react/shallow";
 import qs from "query-string";
 import EmptyFilter from "../components/EmptyFilter";
+import { Spinner } from "flowbite-react";
 
 const Listings = () => {
   const [data, setData] = useState<PagedResult<Auction>>();
@@ -50,7 +51,9 @@ const Listings = () => {
   }, [setParams, url]);
 
   if (!data) {
-    return <p>Loading auctions...</p>;
+    return <div className="flex justify-center items-center">
+      <Spinner size="xl" className="m-auto mt-10" />;
+    </div>
   }
 
   return (
