@@ -11,6 +11,7 @@ namespace BiddingService.RequestHelpers
         {
             CreateMap<AuctionCreated, Auction>();
             CreateMap<Bid, BidDTO>();
+            CreateMap<Bid, BidPlaced>();
         }
     }
 }
