@@ -33,7 +33,6 @@ namespace BiddingService.Controllers
 
             if(auction == null)
             {
-                // TODO: Check with AuctionService if that has auction
                 auction = _grpcClient.GetAuction(auctionId);
                 if (auction == null)
                 {
