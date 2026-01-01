@@ -11,9 +11,16 @@ import { useShallow } from "zustand/react/shallow";
 import qs from "query-string";
 import EmptyFilter from "../components/EmptyFilter";
 import { Spinner } from "flowbite-react";
+import { useAuctionStore } from "@/hooks/useAuctionStore";
 
 const Listings = () => {
-  const [data, setData] = useState<PagedResult<Auction>>();
+  const [loading, setLoading] = useState<boolean>(true);
+  const auctionStore = useAuctionStore(useShallow(state => ({
+    auctions: state.auctions,
+    totalCount: state.totalCount,
+    pageCount: state.pageCount,
+  })));
+  const setData = useAuctionStore(state => state.setData);
   const {
     pageNumber,
     pageSize,
@@ -47,10 +54,11 @@ const Listings = () => {
     getAuctions(url).then((data: PagedResult<Auction>) => {
       setData(data);
       setParams({ pageCount: data.pageCount });
+      setLoading(false);
     });
-  }, [setParams, url]);
+  }, [setParams, url, setData]);
 
-  if (!data) {
+  if (loading) {
     return <div className="flex justify-center items-center">
       <Spinner size="xl" className="m-auto mt-10" />;
     </div>
@@ -59,15 +67,15 @@ const Listings = () => {
   return (
     <>
       <Filters />
-      {data.totalCount === 0 ? (
+      {auctionStore.totalCount === 0 ? (
         <EmptyFilter showReset />
       ) : (
         <>
           <div className="grid grid-cols-4 gap-6">
-            {!data?.results || data.results.length === 0 ? (
+            {!auctionStore.auctions || auctionStore.auctions.length === 0 ? (
               <p>No auctions found.</p>
             ) : (
-              data?.results?.map((auction: Auction) => (
+              auctionStore.auctions.map((auction: Auction) => (
                 <AuctionCard key={auction.id} auction={auction} />
               ))
             )}
