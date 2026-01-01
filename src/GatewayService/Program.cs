@@ -19,6 +19,17 @@ builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
         options.TokenValidationParameters.NameClaimType = "username";
     });
 
+builder.Services.AddCors(options =>
+{
+    options.AddPolicy("customPolicy", policy =>
+    {
+        policy.AllowAnyHeader()
+              .AllowAnyMethod()
+              .AllowCredentials()
+              .WithOrigins(builder.Configuration["ClientApp"]);
+    });
+});
+
 // Do not register a policy named "default" because YARP reserves that name for routes.
 // Use a distinct policy name and match it in the ReverseProxy route configuration.
 const string PolicyNameRequireAuctionScope = "RequireAuctionAppScope";
@@ -34,6 +45,8 @@ builder.Services.AddAuthorization(options =>
 });
 
 var app = builder.Build();
+
+app.UseCors();
 
 app.UseAuthentication();
 app.UseAuthorization();
