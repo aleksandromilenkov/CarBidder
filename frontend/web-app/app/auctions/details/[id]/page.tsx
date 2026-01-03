@@ -6,13 +6,12 @@ import DetailedSpecs from "./DetailedSpecs";
 import EditButton from "./EditButton";
 import { getCurrentUser } from "@/app/actions/authAction";
 import DeleteButton from "./DeleteButton";
-import BidItem from "./BidItem";
+import BidList from "./BidList";
 
 const Details = async ({params}: {params: Promise<{ id: string }>}) => {
   const { id } = await params
   const data = await getDetailedViewData(id);
   const currentUser = await getCurrentUser();
-  const bids = await getBidsForAuction(id);
   return(
   <>
    <div className="flex justify-between">
@@ -33,12 +32,7 @@ const Details = async ({params}: {params: Promise<{ id: string }>}) => {
     <div className="relative w-full bg-gray-200 aspect-16/10 rounded-lg overflow-hidden">
       <CarImage imageUrl={data.imageUrl} />
     </div>
-    <div className="border-2 rounded-lg p-2 bg-gray-200">
-      <Heading title="Bids"/>
-      {bids?.map(bid=>(
-        <BidItem key={bid.id} bid={bid} />
-      ))}
-    </div>
+    <BidList auction={data} user={currentUser} />
   </div>
   <div className="mt-3 grid grid-cols-1 rounded-lg"> 
     <DetailedSpecs auction={data}/>
