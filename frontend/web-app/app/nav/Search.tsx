@@ -28,7 +28,7 @@ const Search = () => {
       <input
         type="text"
         placeholder="Search for cars by make, model or color"
-        className="flex-grow pl-5 bg-transparent focus:outline-none border-transparent focus:border-transparent focus:ring-0 text-sm text-gray-600"
+        className="input-custom"
         id="search"
         name="search"
         value={searchInput}
