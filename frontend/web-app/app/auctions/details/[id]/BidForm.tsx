@@ -4,6 +4,7 @@ import { placeBidForAuction } from "@/app/actions/auctionActions";
 import { useBidStore } from "@/hooks/useBidStore";
 import { numberWithCommas } from "@/lib/numberWithCommas";
 import { FieldValues, useForm } from "react-hook-form";
+import toast from "react-hot-toast";
 
 type Props = {
     auctionId: string;
@@ -15,10 +16,15 @@ const BidForm = ({auctionId, highestBid}: Props) => {
 
    const onSubmit = async (data: FieldValues) => {
         placeBidForAuction(auctionId, parseFloat(data.amount)).then((newBid) => {
+            if(newBid.error){
+                reset(); 
+                throw newBid.error;
+             }
             addBid(newBid);
             reset();
+        }).catch((error) => {
+            toast.error(error.message || "Failed to place bid.");
         });
-
    };
   return (
     <form onSubmit={handleSubmit(onSubmit)} className="flex items-center border-2 rounded-lg py-2">
