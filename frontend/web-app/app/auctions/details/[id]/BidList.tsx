@@ -19,8 +19,11 @@ const BidList = ({ user, auction }: Props) => {
   const [loading, setLoading] = useState(true);
   const bids = useBidStore((state) => state.bids);
   const setBids = useBidStore((state) => state.setBids);
+  const open = useBidStore((state)=> state.open);
+  const setOpen = useBidStore((state)=> state.setOpen);
+  const openForBids = new Date(auction.auctionEnd) > new Date();
   const highestBid = bids.reduce(
-    (max, bid) => (bid.amount > max ? bid.amount : max),
+    (prev, current) => (prev > current.amount ? prev : current.bidStatus.includes("Accepted") ? current.amount : prev),
     0
   );
 
@@ -41,6 +44,10 @@ const BidList = ({ user, auction }: Props) => {
         setLoading(false);
       });
   }, [setBids, auction.id]);
+
+  useEffect(()=>{
+    setOpen(openForBids);
+  },[openForBids, setOpen])
 
   if (loading) {
     return <span>Loading bids...</span>;
@@ -69,7 +76,13 @@ const BidList = ({ user, auction }: Props) => {
         )}
       </div>
       <div className="px-2 pb-2 text-gray-500">
-        {!user ? (
+        {
+        !open ? (
+            <div className="flex items-center justify-center p-2 text-lg font-semibold">
+            This auction has finished
+          </div>
+        ) :
+        !user ? (
           <div className="flex items-center justify-center p-2 text-lg font-semibold">
             Please login to make a bid.
           </div>
@@ -79,7 +92,8 @@ const BidList = ({ user, auction }: Props) => {
           </div>
         ) : (
           <BidForm auctionId={auction.id} highestBid={highestBid} />
-        )}
+        )
+    }
       </div>
     </div>
   );
