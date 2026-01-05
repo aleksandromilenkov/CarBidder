@@ -1,15 +1,19 @@
 'use client';
 import { useAuctionStore } from "@/hooks/useAuctionStore";
 import { useBidStore } from "@/hooks/useBidStore";
-import { Bid } from "@/types";
+import { Auction, Bid } from "@/types";
 import { HubConnection, HubConnectionBuilder } from "@microsoft/signalr";
+import { User } from "next-auth";
 import { useParams } from "next/navigation";
 import { useCallback, useEffect, useRef } from "react";
+import AuctionCreatedToast from "../components/AuctionCreatedToast";
+import toast from "react-hot-toast";
 
 type Props = {
   children: React.ReactNode;
+  user: User | null;
 };
-const SignalRProvider = ({ children }: Props) => {
+const SignalRProvider = ({ children, user }: Props) => {
   const connection = useRef<HubConnection | null>(null);
   const setCurrentPrice = useAuctionStore((state) => state.setCurrentPrice);
   const addBid = useBidStore((state) => state.addBid);
@@ -24,6 +28,12 @@ const SignalRProvider = ({ children }: Props) => {
      }
   }, [addBid, setCurrentPrice, params.id]);
 
+  const handleAuctionCreated = useCallback((auction: Auction) => {
+    if (user?.username !== auction.seller) {
+        return toast(<AuctionCreatedToast auction={auction} />, { duration: 10000 } );
+    }
+  }, [user?.username]);
+
   useEffect(() => {
     if (!connection.current) {
       connection.current = new HubConnectionBuilder()
@@ -35,11 +45,16 @@ const SignalRProvider = ({ children }: Props) => {
         .catch((error) => console.error("SignalR Connection Error: ", error));
     }
     connection.current.on("BidPlaced", handleBidPlaced);
+    connection.current.on("AuctionCreated", handleAuctionCreated);
 
     return () => {
         connection.current?.off("BidPlaced", handleBidPlaced);
+        connection.current?.off("AuctionCreated", handleAuctionCreated);
     }
-  }, [handleBidPlaced]);
-  return <div>{children}</div>;
+  }, [handleBidPlaced, handleAuctionCreated]);
+  return <div>
+
+    {children}
+    </div>;
 };
 export default SignalRProvider;
