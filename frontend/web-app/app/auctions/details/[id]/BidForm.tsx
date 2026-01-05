@@ -1,6 +1,6 @@
 'use client';
 
-import { placeBidForAuction } from "@/app/actions/auctionActions";
+import { getDetailedViewData, placeBidForAuction } from "@/app/actions/auctionActions";
 import { useBidStore } from "@/hooks/useBidStore";
 import { numberWithCommas } from "@/lib/numberWithCommas";
 import { FieldValues, useForm } from "react-hook-form";
@@ -15,6 +15,10 @@ const BidForm = ({auctionId, highestBid}: Props) => {
    const addBid = useBidStore((state) => state.addBid);
 
    const onSubmit = async (data: FieldValues) => {
+    if(data.amount <= highestBid){
+        reset();
+        return toast.error("Bid must be at least $" + numberWithCommas(highestBid + 1) );
+    }
         placeBidForAuction(auctionId, parseFloat(data.amount)).then((newBid) => {
             if(newBid.error){
                 reset(); 
