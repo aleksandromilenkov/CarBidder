@@ -1,11 +1,13 @@
-import { AiOutlineCar } from "react-icons/ai";
+'use client'
+
 import Search from "./Search";
 import Logo from "./Logo";
 import LoginButton from "./LoginButton";
-import { getCurrentUser } from "../actions/authAction";
 import UserActions from "./UserActions";
-const Navbar = async () => {
-  const user = await getCurrentUser();
+import { useSession } from "next-auth/react";
+const Navbar = () => {
+  const session = useSession();
+  const user = session.data?.user;
   return (
     <header className="sticky top-0 z-50 flex justify-between bg-white p-5 items-center text-gray-800 shadow-md">
         <Logo/>
