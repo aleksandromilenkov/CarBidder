@@ -89,8 +89,8 @@ services:
     environment:
       - ASPNETCORE_ENVIRONMENT=Docker
       - ASPNETCORE_URLS=http://+:80
-      - IssuerUri=http://id.carbidder.local
-      - ClientApp=http://app.carbidder.local
+      - IssuerUri=https://id.carbidder.local
+      - ClientApp=https://app.carbidder.local
       - ConnectionStrings__DefaultConnection=Server=postgres;Port=5432;User Id=postgres;Password=postgrespw;Database=IdentityDB
       - VIRTUAL_HOST=id.carbidder.local
     depends_on:
@@ -107,7 +107,7 @@ services:
       - ASPNETCORE_ENVIRONMENT=Docker
       - ASPNETCORE_URLS=http://+:80
       - VIRTUAL_HOST=api.carbidder.local
-      - ClientApp=http://app.carbidder.local
+      - ClientApp=https://app.carbidder.local
   bid-svc:
     image: aleksandromilenkov/bid-svc:latest
     build: 
@@ -153,9 +153,9 @@ services:
     environment:
       - AUTH_SECRET=b6Qif81Hkc6ai66v8P0on4aIsWvpThbwZYu9B5iE+CA=
       - API_URL=http://gateway-svc/
-      - ID_URL=http://id.carbidder.local
+      - ID_URL=https://id.carbidder.local
       - ID_URL_INTERNAL=http://identity-svc
-      - AUTH_URL=http://app.carbidder.local
+      - AUTH_URL=https://app.carbidder.local
       - AUTH_URL_INTERNAL=http://web-app:3000
       - VIRTUAL_HOST=app.carbidder.local
       - VIRTUAL_PORT=3000
@@ -164,8 +164,10 @@ services:
     container_name: nginx-proxy
     ports:
       - "80:80"
+      - "443:443"
     volumes:
       - /var/run/docker.sock:/tmp/docker.sock:ro
+      - ./devcerts:/etc/nginx/certs
 volumes:
   pgdata:
   mongodata:
