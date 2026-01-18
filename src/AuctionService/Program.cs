@@ -6,6 +6,7 @@ using MassTransit;
 using AuctionService.Consumers;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using AuctionService.Services;
+using AuctionService.Repositories;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -51,6 +52,8 @@ builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
         options.TokenValidationParameters.ValidateAudience = false;
         options.TokenValidationParameters.NameClaimType = "username";
     });
+
+builder.Services.AddScoped<IAuctionRepository, AuctionRepository>();
 
 builder.Services.AddGrpc();
 
