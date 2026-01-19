@@ -56,8 +56,7 @@ namespace AuctionService.Controllers
             }
             var auction = _mapper.Map<Auction>(auctionDTO);
 
-            // TODO: add current logged in user as seller
-            auction.Seller = User.Identity.Name ?? "anonymous";
+            auction.Seller = User?.Identity?.Name ?? "anonymous";
 
             _auctionRepository.AddAuction(auction);
 
@@ -83,8 +82,7 @@ namespace AuctionService.Controllers
             {
                 return NotFound();
             }
-            // TODO: Check seller == current logged in user (its username)
-            if (User.Identity.Name != auction.Seller)
+            if (User?.Identity?.Name != auction.Seller)
             {
                 return Forbid();
             }
