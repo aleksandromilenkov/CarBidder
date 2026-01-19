@@ -1,16 +1,11 @@
-﻿using System.Globalization;
-using AuctionService.Data;
-using AuctionService.DTOs;
+﻿using AuctionService.DTOs;
 using AuctionService.Entities;
 using AuctionService.Repositories;
 using AutoMapper;
-using AutoMapper.QueryableExtensions;
 using Contracts;
 using MassTransit;
 using Microsoft.AspNetCore.Authorization;
-using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.EntityFrameworkCore;
 
 namespace AuctionService.Controllers
 {
@@ -30,9 +25,9 @@ namespace AuctionService.Controllers
         }
 
         [HttpGet]
-        public async Task<ActionResult<List<AuctionDTO>>> GetAuctions([FromQuery] string date)
+        public async Task<ActionResult<List<AuctionDTO>>> GetAuctions([FromQuery] string? date)
         {
-           return await _auctionRepository.GetAuctionsAsync(date);
+            return await _auctionRepository.GetAuctionsAsync(date);
         }
 
         [HttpGet("{id}")]
@@ -69,7 +64,7 @@ namespace AuctionService.Controllers
 
             var result = await _auctionRepository.SaveChangesAsync();
 
-            if(!result) return BadRequest("Could not create auction");
+            if (!result) return BadRequest("Could not create auction");
             return CreatedAtAction(nameof(GetAuctionById), new { id = auction.Id }, newAuction);
         }
 
@@ -119,7 +114,7 @@ namespace AuctionService.Controllers
 
             await _publishEndpoint.Publish(new AuctionDeleted { Id = auction.Id.ToString() });
 
-            var result  = await _auctionRepository.SaveChangesAsync() ;
+            var result = await _auctionRepository.SaveChangesAsync();
 
             if (result) return NoContent();
             return BadRequest("Problem removing Auction");

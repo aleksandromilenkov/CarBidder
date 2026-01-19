@@ -1,7 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
-using AuctionService.Controllers;
+﻿using AuctionService.Controllers;
 using AuctionService.DTOs;
 using AuctionService.Entities;
 using AuctionService.Repositories;
@@ -16,14 +13,14 @@ using Moq;
 
 namespace AuctionService.UnitTests
 {
-    public class AuctionControllerTests
+    public class AuctionControllerUnitTests
     {
         private readonly Mock<IAuctionRepository> _auctionRepository;
         private readonly Mock<IPublishEndpoint> _publishEndpoint;
         private readonly Fixture _fixture;
         private readonly AuctionsController _controller;
         private readonly IMapper _mapper;
-        public AuctionControllerTests()
+        public AuctionControllerUnitTests()
         {
             _fixture = new Fixture();
             _auctionRepository = new Mock<IAuctionRepository>();
@@ -171,7 +168,7 @@ namespace AuctionService.UnitTests
             auction.Item = _fixture.Build<Item>().Without(i => i.Auction).Create();
             auction.Seller = "test";
             var auctionUpdateDTO = _fixture.Create<UpdateAuctionDTO>();
-            _auctionRepository.Setup(repo => repo.GetAuctionEntityByIdAsync(It.IsAny<Guid>())).ReturnsAsync(value:null);
+            _auctionRepository.Setup(repo => repo.GetAuctionEntityByIdAsync(It.IsAny<Guid>())).ReturnsAsync(value: null);
             _auctionRepository.Setup(repo => repo.SaveChangesAsync()).ReturnsAsync(true);
 
             // Act

@@ -1,15 +1,13 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
+﻿using AuctionService.Data;
+using AuctionService.IntegrationTests.Utils;
+using MassTransit;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Mvc.Testing;
-using Testcontainers.PostgreSql;
 using Microsoft.AspNetCore.TestHost;
 using Microsoft.EntityFrameworkCore;
-using AuctionService.Data;
 using Microsoft.Extensions.DependencyInjection;
-using MassTransit;
-using AuctionService.IntegrationTests.Utils;
+using Testcontainers.PostgreSql;
+using WebMotions.Fake.Authentication.JwtBearer;
 
 namespace AuctionService.IntegrationTests.Fixtures
 {
@@ -33,6 +31,14 @@ namespace AuctionService.IntegrationTests.Fixtures
                 });
 
                 services.AddMassTransitTestHarness();
+
+                services.AddAuthentication(options =>
+                {
+                    options.DefaultAuthenticateScheme = FakeJwtBearerDefaults.AuthenticationScheme;
+                    options.DefaultChallengeScheme = FakeJwtBearerDefaults.AuthenticationScheme;
+                })
+                .AddFakeJwtBearer();
+
                 services.EnsureCreated<AuctionDbContext>();
             });
         }
