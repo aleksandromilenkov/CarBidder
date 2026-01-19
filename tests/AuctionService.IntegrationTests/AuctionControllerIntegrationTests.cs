@@ -8,12 +8,12 @@ using Microsoft.Extensions.DependencyInjection;
 
 namespace AuctionService.IntegrationTests
 {
-    public class AuctionControllerIntegrationTests : IClassFixture<CustomWebAppFactory>, IAsyncLifetime
+    [Collection("Shared collection")]
+    public class AuctionControllerIntegrationTests : IAsyncLifetime
     {
         private readonly CustomWebAppFactory _factory;
         private readonly HttpClient _httpClient;
         private const string CAR_ID = "afbee524-5972-4075-8800-7d1f9d7b0a0c";
-        private const string NON_EXISTING_GUID = "afbee524-5972-4075-8800-7d1f9d7b0a0w";
 
         public AuctionControllerIntegrationTests(CustomWebAppFactory factory)
         {
@@ -31,7 +31,7 @@ namespace AuctionService.IntegrationTests
             return Task.CompletedTask;
         }
 
-        private CreateAuctionDTO GetAuctionForCreate()
+        private static CreateAuctionDTO GetAuctionForCreate()
         {
             return new CreateAuctionDTO
             {

@@ -13,7 +13,7 @@ namespace AuctionService.IntegrationTests.Fixtures
 {
     public class CustomWebAppFactory : WebApplicationFactory<Program>, IAsyncLifetime
     {
-        private PostgreSqlContainer _postgreSqlContainer = new PostgreSqlBuilder().Build();
+        private readonly PostgreSqlContainer _postgreSqlContainer = new PostgreSqlBuilder().Build();
         public async Task InitializeAsync()
         {
             await _postgreSqlContainer.StartAsync();
