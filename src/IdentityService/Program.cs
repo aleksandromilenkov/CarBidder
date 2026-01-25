@@ -2,6 +2,8 @@ using System.Globalization;
 using System.Text;
 using Duende.IdentityServer.Licensing;
 using IdentityService;
+using Npgsql;
+using Polly;
 using Serilog;
 
 Log.Logger = new LoggerConfiguration()
@@ -19,7 +21,12 @@ try
         .ConfigureServices()
         .ConfigurePipeline();
 
-    SeedData.EnsureSeedData(app);
+    var retryPolicy = Policy
+        .Handle<NpgsqlException>()
+        .WaitAndRetry(5, retryAttempt => TimeSpan.FromSeconds(5));
+
+    retryPolicy.ExecuteAndCapture(() => SeedData.EnsureSeedData(app));
+
 
     if (app.Environment.IsDevelopment())
     {

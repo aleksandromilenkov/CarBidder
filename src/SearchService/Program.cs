@@ -1,15 +1,10 @@
 using System.Net;
 using MassTransit;
-using Microsoft.Extensions.DependencyInjection;
-using MongoDB.Driver;
-using MongoDB.Entities;
 using Polly;
 using Polly.Extensions.Http;
-using AutoMapper;
-using SearchService.Data;
-using SearchService.Models;
-using SearchService.Services;
 using SearchService.Consumers;
+using SearchService.Data;
+using SearchService.Services;
 
 
 var builder = WebApplication.CreateBuilder(args);
@@ -24,10 +19,11 @@ builder.Services.AddMassTransit(x =>
 {
     // Where to find consumers that we are creating:
     x.AddConsumersFromNamespaceContaining<AuctionCreatedConsumer>();
-    x.SetEndpointNameFormatter(new KebabCaseEndpointNameFormatter("search", false));    
+    x.SetEndpointNameFormatter(new KebabCaseEndpointNameFormatter("search", false));
     x.UsingRabbitMq((context, cfg) =>
     {
-        cfg.Host(builder.Configuration["RabbitMq:Host"], "/", h => {
+        cfg.Host(builder.Configuration["RabbitMq:Host"], "/", h =>
+        {
             h.Username(builder.Configuration.GetValue("RabbitMq:Username", "guest")); // if not specified RabbitMq:Username in the config, use the word 'guest'
             h.Username(builder.Configuration.GetValue("RabbitMq:Password", "guest"));
         });
@@ -51,15 +47,11 @@ app.UseAuthorization();
 app.MapControllers();
 
 
-app.Lifetime.ApplicationStarted.Register(async () => {
-    try
-    {
-        await DbInitializer.InitDb(app);
-    }
-    catch (Exception ex)
-    {
-        Console.WriteLine($"An error occurred while initializing the database: {ex.Message}");
-    }
+app.Lifetime.ApplicationStarted.Register(async () =>
+{
+    await Policy.Handle<TimeoutException>()
+        .WaitAndRetryAsync(5, retryAttempt => TimeSpan.FromSeconds(10))
+        .ExecuteAndCaptureAsync(async () => await DbInitializer.InitDb(app));
 });
 
 app.Run();
