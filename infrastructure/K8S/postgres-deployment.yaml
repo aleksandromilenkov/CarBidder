@@ -3,6 +3,7 @@ kind: Deployment
 metadata:
   name: postgres
 spec:
+  replicas: 1
   selector:
     matchLabels:
       app: postgres
@@ -13,7 +14,7 @@ spec:
     spec:
       containers:
       - name: postgres
-        image: postgres
+        image: postgres:17
         env:
           - name: POSTGRES_PASSWORD
             value: "postgrespw"
@@ -21,7 +22,7 @@ spec:
         - containerPort: 5432
         volumeMounts:
         - name: postgresdata
-          mountPath: /var/lib/postgresql/data
+          mountPath: /var/lib/postgresql
       volumes:
         - name: postgresdata
           persistentVolumeClaim:
