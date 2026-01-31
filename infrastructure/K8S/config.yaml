@@ -14,3 +14,18 @@ data:
   Kestrel__Endpoints__Grpc__Url: http://+:7777
   Kestrel__Endpoints__WebApi__Protocols: Http1
   Kestrel__Endpoints__WebApi__Url: http://+:80
+
+---
+
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: search-svc-config
+data:
+  ASPNETCORE_ENVIRONMENT: Docker
+  ASPNETCORE_URLS: http://+:80
+  RabbitMq__Host: rabbitmq-clusterip.default.svc.cluster.local
+  RabbitMq__Username: rabbit
+  RabbitMq__Password: rabbitpw
+  AuctionServiceUrl: http://auction-clusterip
+  ConnectionStrings__MongoDbConnection: mongodb://root:mongopw@mongo-clusterip:27017
