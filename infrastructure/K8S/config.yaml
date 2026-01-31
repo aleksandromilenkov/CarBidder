@@ -66,3 +66,14 @@ metadata:
 data:
   ClientApp: https://app.carbidder.local
   IdentityServiceUrl: http://identity-clusterip
+
+---
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: identity-svc-config
+data:
+  ASPNETCORE_URLS: http://+:80
+  IssuerUri: http://id.carbidder.local
+  ClientApp: http://app.carbidder.local
+  ConnectionStrings__DefaultConnection: Server=postgres-clusterip;Port=5432;User Id=postgres;Password=postgrespw;Database=IdentityDB
