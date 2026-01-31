@@ -57,3 +57,12 @@ data:
   RabbitMq__Host: rabbitmq-clusterip.default.svc.cluster.local
   RabbitMq__Username: rabbit
   RabbitMq__Password: rabbitpw
+---
+
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: gateway-svc-config
+data:
+  ClientApp: https://app.carbidder.local
+  IdentityServiceUrl: http://identity-clusterip
