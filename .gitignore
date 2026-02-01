@@ -53,3 +53,7 @@ logs/
 
 # Duende IdentityServer signing keys
 keys/
+
+devcerts/
+*.key
+*.crt
