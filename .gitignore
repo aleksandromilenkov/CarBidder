@@ -57,3 +57,7 @@ keys/
 devcerts/
 *.key
 *.crt
+
+*-secrets.yaml
+dev-secrets.yaml
+*.secret
