@@ -14,6 +14,19 @@ jobs:
         service:
           - name: "aleksandromilenkov/auction-svc"
             path: "src/AuctionService"
+          - name: "aleksandromilenkov/search-svc"
+            path: "src/SearchService"
+          - name: "aleksandromilenkov/bid-svc"
+            path: "src/BiddingService"
+          - name: "aleksandromilenkov/notify-svc"
+            path: "src/NotificationService"
+          - name: "aleksandromilenkov/identity-svc"
+            path: "src/IdentityService"
+          - name: "aleksandromilenkov/gateway-svc"
+            path: "src/GatewayService"
+          - name: "aleksandromilenkov/web-app"
+            path: "frontend/web-app"
+          
     steps:
     - name: Checkout code
       uses: actions/checkout@v3
