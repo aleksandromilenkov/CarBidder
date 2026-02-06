@@ -2,10 +2,9 @@
 import { Button } from "flowbite-react"
 import { signIn } from "next-auth/react"
 
-type Props = {}
-const LoginButton = (props: Props) => {
+const LoginButton = () => {
   return (
-    <Button outline onClick={()=> signIn('id-server', {redirectTo: "/"}, {prompt: 'login'})}>Loginn</Button>
+    <Button outline onClick={()=> signIn('id-server', {redirectTo: "/"}, {prompt: 'login'})}>Login</Button>
   )
 }
 export default LoginButton
