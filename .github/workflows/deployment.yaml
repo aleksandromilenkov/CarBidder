@@ -81,9 +81,10 @@ jobs:
         echo "AWS_DEFAULT_REGION=us-east-1" >> $GITHUB_ENV
 
     - name: Install AWS CLI
+      continue-on-error: true
       run: |
         sudo apt-get update
-        sudo apt-get install -y awscli
+        sudo apt-get install -y aws-cli || pip install awscli
 
     - name: Install kubectl
       run: |
