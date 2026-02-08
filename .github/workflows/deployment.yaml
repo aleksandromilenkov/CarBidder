@@ -64,3 +64,72 @@ jobs:
         file: ${{ matrix.service.path }}/Dockerfile
         push: true
         tags: ${{ matrix.service.name }}:latest
+
+  deploy-to-aws-eks:
+    needs: build-and-push
+    runs-on: ubuntu-latest
+    if: github.ref == 'refs/heads/main' || github.ref == 'refs/heads/master'
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v3
+
+    - name: Configure AWS credentials (Dummy)
+      run: |
+        echo "Simulating AWS credential configuration..."
+        echo "AWS_ACCESS_KEY_ID=${{ secrets.AWS_ACCESS_KEY_ID }}" >> $GITHUB_ENV
+        echo "AWS_SECRET_ACCESS_KEY=${{ secrets.AWS_SECRET_ACCESS_KEY }}" >> $GITHUB_ENV
+        echo "AWS_DEFAULT_REGION=us-east-1" >> $GITHUB_ENV
+
+    - name: Install AWS CLI
+      run: |
+        sudo apt-get update
+        sudo apt-get install -y awscli
+
+    - name: Install kubectl
+      run: |
+        curl -LO "https://dl.k8s.io/release/$(curl -L -s https://dl.k8s.io/release/stable.txt)/bin/linux/amd64/kubectl"
+        chmod +x kubectl
+        sudo mv kubectl /usr/local/bin/
+
+    - name: Update kubeconfig for EKS (Dummy)
+      run: |
+        echo "Attempting to connect to EKS cluster (this will fail with dummy credentials)..."
+        aws eks update-kubeconfig --name carbidder-cluster --region us-east-1 || true
+        echo "Note: Connection failed due to invalid/missing credentials (expected behavior for simulation)"
+
+    - name: Deploy to EKS (Dummy)
+      run: |
+        echo "Simulating deployment to EKS..."
+        echo "Services to deploy:"
+        echo "  - Auction Service"
+        echo "  - Bidding Service"
+        echo "  - Search Service"
+        echo "  - Notification Service"
+        echo "  - Identity Service"
+        echo "  - Gateway Service"
+        echo "  - Web App"
+        echo ""
+        echo "Deployment manifests:"
+        ls -la infrastructure/K8S/*.yaml
+        echo ""
+        echo "Applying K8S manifests (this would connect to actual EKS with valid credentials)..."
+        kubectl apply -f infrastructure/K8S/ || echo "Failed to apply manifests (expected with dummy credentials)"
+
+    - name: Check deployment status (Dummy)
+      continue-on-error: true
+      run: |
+        echo "Checking deployment status..."
+        kubectl get deployments --all-namespaces || echo "Could not retrieve deployments (expected with dummy credentials)"
+        kubectl get pods --all-namespaces || echo "Could not retrieve pods (expected with dummy credentials)"
+
+    - name: Deployment Summary
+      run: |
+        echo "=== EKS Deployment Simulation Complete ==="
+        echo "This is a dummy deployment job with invalid AWS credentials. Because it's not free!"
+        echo "With valid AWS credentials, the following would be deployed:"
+        echo "  - All services from infrastructure/K8S/ directory"
+        echo "  - Using latest Docker images pushed in build-and-push job"
+        echo ""
+        echo "To enable real deployments, provide valid AWS credentials:"
+        echo "  - AWS_ACCESS_KEY_ID secret"
+        echo "  - AWS_SECRET_ACCESS_KEY secret"
