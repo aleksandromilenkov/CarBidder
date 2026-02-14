@@ -17,7 +17,7 @@ CarBidder is a distributed microservices application that enables users to creat
 - **Cloud-Ready**: Kubernetes deployment configurations included
 - **Docker Containerized**: All services containerized for consistency
 
-## Video
+## 🎥 Video Of this project running locally on Kubernetes (my YouTube channel) :
 https://youtu.be/9lK6TGRz4mw
 
 ## 🏗️ Architecture
