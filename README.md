@@ -16,6 +16,7 @@ CarBidder is a distributed microservices application that enables users to creat
 - **Notifications**: Real-time notifications for auction events
 - **Cloud-Ready**: Kubernetes deployment configurations included
 - **Docker Containerized**: All services containerized for consistency
+- **CI/CD**: Built CI/CD using Github Action's matrix strategy for integration and deployment to AWS EKS
 
 ## 🎥 Video Of this project running locally on Kubernetes (my YouTube channel) :
 https://youtu.be/9lK6TGRz4mw
