@@ -1,6 +1,8 @@
+<img width="1419" height="786" alt="image" src="https://github.com/user-attachments/assets/86873eac-a1d4-48b0-abdc-355b3490a981" />
+
 # CarBidder - Microservices Auction Platform
 
-A modern, scalable microservices-based auction bidding platform built with .NET and Next.js. The system is designed for high availability and scalability using containerized deployments and cloud-native architecture patterns.
+A modern, scalable microservices-based auction bidding platform built with .NET 10 and Next.js 16. The system is designed for high availability and scalability using containerized deployments and cloud-native architecture patterns.
 
 ## 🎯 Overview
 
@@ -16,6 +18,10 @@ CarBidder is a distributed microservices application that enables users to creat
 - **Notifications**: Real-time notifications for auction events
 - **Cloud-Ready**: Kubernetes deployment configurations included
 - **Docker Containerized**: All services containerized for consistency
+- **CI/CD**: Built CI/CD using Github Action's matrix strategy for integration and deployment to AWS EKS
+
+## 🎥 Video Of this project running locally on Kubernetes (my YouTube channel) :
+https://youtu.be/9lK6TGRz4mw
 
 ## 🏗️ Architecture
 
@@ -388,9 +394,6 @@ Each service has `appsettings.{Environment}.json` files:
 
 This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
 
-## 👨‍💼 Author
-
-**Neil Cummings**
 
 ## 🙏 Acknowledgments
 
