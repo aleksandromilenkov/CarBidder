@@ -3,6 +3,8 @@ kind: Deployment
 metadata:
   name: postgres
 spec:
+  strategy:
+    type: Recreate
   replicas: 1
   selector:
     matchLabels:
@@ -25,7 +27,7 @@ spec:
         - containerPort: 5432
         volumeMounts:
         - name: postgresdata
-          mountPath: /var/lib/postgresql
+          mountPath: /var/lib/postgresql/data
       volumes:
         - name: postgresdata
           persistentVolumeClaim:
