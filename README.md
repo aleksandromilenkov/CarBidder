@@ -1,3 +1,5 @@
+<img width="1419" height="786" alt="image" src="https://github.com/user-attachments/assets/86873eac-a1d4-48b0-abdc-355b3490a981" />
+
 # CarBidder - Microservices Auction Platform
 
 A modern, scalable microservices-based auction bidding platform built with .NET 10 and Next.js 16. The system is designed for high availability and scalability using containerized deployments and cloud-native architecture patterns.
